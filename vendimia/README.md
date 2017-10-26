@@ -7,4 +7,5 @@
 	Virtualenv
 	mailgun
 	git
+	a medio redis, celery.
 </p>
