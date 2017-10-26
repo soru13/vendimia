@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+{% block title %}
+    Confirmación
+{% endblock %}
+{% block content %}
+
+    <p class="login-box-msg"><h2 style="color:gray;">Biemvenido!!</h2></p>
+              {% if user.is_active %}
+              <strong>Tu registro ha sido confirmado</strong><br>
+                Ahora ya eres parte del equipo !! :) 
+
+              {% else %}
+                 <h3 style="color:gray;"> Tu registro ha sido procesado, <strong>ingresa a tu correo y confirma tu registro.</strong>  </h3><br>
+
+              {% endif %}
+
+{% endblock %}
+
+
+
+

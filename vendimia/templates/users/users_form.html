@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+    Registro de Cleintes
+{% endblock %}
+
+{% block active_clientes %}
+  active
+{% endblock %}
+{% block content %}
+  <h2>Registro de Clientes</h2>
+  <h5 style="text-align: right;">Clave: {{clientes}}</h5>
+  <form method="POST">
+    {% csrf_token %}
+      {{ form.as_p}}
+      <input type="hidden" name="usuario_registro" value="{{Perfil.user.id}}">
+      <button type="submit" class="small button">Guardar</button>
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+    $("#id_usuario_registro").val({{Perfil.user.id}});
+
+
+    function alphaOnly(event) {
+  var key = event.keyCode;
+  return ((key >= 65 && key <= 90) || key == 8);
+};
+  </script>
+
+
+{% endblock %}

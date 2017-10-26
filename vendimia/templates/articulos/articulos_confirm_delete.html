@@ -1,0 +1,17 @@
+
+
+{% extends "base.html" %}
+{% block title %}
+    Editar
+{% endblock %}
+{% block active_articulos %}
+active
+{% endblock %}
+{% block content %}
+
+<form method="post">{% csrf_token %}
+    ¿Estás seguro que deseas borrar el articulo "{{ object }}"?
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}

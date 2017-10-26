@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}
+{% block title %}
+    Ventas
+{% endblock %}
+{% block active_ventas %}
+active
+{% endblock %}
+{% block content %}
+<p style="text-align: right;">
+    <a href="{% url "ventas:new" %}" class="button"><i class="fi-plus"></i> <span style="padding-left: 5px;">Nueva Venta</span></a>
+</p>
+<table class="hover">
+  <thead>
+    <tr>
+      <th>Folio Ventas</th>
+      <th>Clave Cliente</th>
+      <th>Nombre</th>
+      <th>Total</th>
+      <th>Fecha</th>
+      <th>Estatus</th>
+    </tr>
+  </thead>
+  <tbody>
+    <h2>Ventas Activas</h2>
+     {% for venta in object_list %}
+        <tr>
+          <td>{{ venta.id }}</td>
+          <td>{{ venta.cliente.id }}</td>
+          <td>{{ venta.cliente.nombre }}</td>
+          <td>{{ venta.total_a_pagar }}</td>
+          <td>{{ venta.fecha_registro }}</td>
+          <td>{% if venta.is_active %}  <i class="fi-x"></i>   {% else%} <i class="fi-check"></i>  {% endif %}  </td>
+          <td>
+                <a href="{% url "ventas:delete" venta.id %}"><i class="fi-trash"></i></a> 
+          </td>
+
+        </tr>
+     {% endfor %}               
+   
+
+  </tbody>
+</table>
+
+{% endblock %}

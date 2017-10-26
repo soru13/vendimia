@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+    Registro de ventas
+{% endblock %}
+
+{% block active_ventas %}
+  active
+{% endblock %}
+{% block content %}
+  <h2>Registro de Articulos</h2>
+  <h5 style="text-align: right;">Folio Venta: {{ventas}}</h5>
+  <form method="POST">
+    {% csrf_token %}
+      {{ form.as_p}}
+      <button type="submit" class="small button">Guardar</button>
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+
+  <script type="text/javascript">
+    $("#id_configuracion").val({{configuracion.id}});
+    $("#id_usuario_registro").val({{Perfil.user.id}});
+  </script>
+{% endblock %}

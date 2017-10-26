@@ -1,0 +1,82 @@
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+    Sign Up
+{% endblock %}
+
+{% block content %}
+  {% if not user.is_authenticated %}
+
+    <center>
+        <h2>Regístrate</h2>
+        <p>
+            ¿Ya tienes cuenta?&nbsp;<a href="{% url "login" %}" >Inicia Sesión</a> 
+        </p>
+
+        <span>{% if error %} {{error}} {%endif%}</span>
+    </center>
+     <div class="row align-center" id="login" >
+        
+        
+        <div class="small-12 medium-6 columns" >
+        <center>
+            <h4> Con un usuario y contraseña</h4>
+        </center>
+        
+        <form method="POST" action="{% url 'usuarios:new' %}" >
+                {% csrf_token %}
+            <div class="row">
+                <div class="small-12 large-6 columns">
+                  <label>Nombre de Usuario
+                    {{form.username}}
+                  </label>
+                </div>
+                <div class="small-12 large-6 columns">
+                  <label>Nombre y Apellido
+                      <input type="text" name="nombre_apellido" class="radius" required="true">
+                  </label>
+                </div>
+            </div>
+             <div class="row">
+                <div class="small-12 large-12 columns">
+                  <label>Email
+                    {{form.email}}
+                  </label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="small-12 large-6 columns">
+                  <label>Contraseña
+                    {{ form.password2 }}
+                  </label>
+                </div>
+                <div class="small-12 large-6 columns">
+                  <label>Confirmar contraseña
+                      {{ form.password1 }}
+                  </label>
+                </div>
+            </div>
+            <div class="row align-center">
+                <div class="small-12 large-6 columns">
+                  <input type="submit" class="btn-Green button" value="Registrarse" />
+                </div>
+
+            </div>                
+        </form>
+        </div>
+    </div>
+    <center>
+    <br><br>
+        <p>Valoramos tu privacidad como si fuera la nuestra. <br>
+
+Ante cualquier duda, nuestros Términos de Servicio.</p>
+    </center>
+    {% endif %}
+{% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
+{% endblock %}
+
+

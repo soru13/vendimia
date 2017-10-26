@@ -1,0 +1,372 @@
+
+{% extends "base.html" %}
+{% block title %}
+    Articulos
+{% endblock %}
+{% block active_ventas %}
+active
+{% endblock %}
+{% block content %}
+<table class="hover" id="ventaoperacion" >
+  <thead>
+    <tr>
+      <th width="200">Descripción Articulo</th>
+      <th>Modelo</th>
+      <th>Cantidad</th>
+      <th>Precio</th>
+      <th>Importe</th>
+    </tr>
+
+  </thead>
+  <h2>Registro de Ventas</h2>
+  <h5 style="text-align: right;">Folio Venta: {{ventas}}</h5>
+    <div class="input-group">
+      <span class="input-group-label">Cliente:</span>
+      <div class="small-4 cell">
+        <input type="text" placeholder="cliente" name="id_cliente_complete" class="input-group-field" id="id_cliente_complete">
+      </div>
+      <div class="input-group-button">
+        <span id="cliente_rfc" style="padding-left: 15px;"></span>
+      </div>
+    </div>
+    <div class="input-group">
+      <span class="input-group-label">Articulo:</span>
+      <div class="small-4 cell">
+        <input type="text" placeholder="Articulo" class="input-group-field" name="id_articulo_complete" id="id_articulo_complete">
+      </div>
+      <div class="input-group-button">
+        <span id="#" style="padding-left: 15px;">
+            <button class="button" type="button" id="agregarArticulo" style="height: 35px;">
+              <!-- Visual users will see the X, but not the "Close" text -->
+              <span aria-hidden="true"><i class="fi-plus"></i></span>
+            </button>
+        </span>
+      </div>
+    </div>
+  <tbody id="articulos_agregados">
+    
+
+  </tbody>
+</table>
+<table class="stack" id="elejirplazo" style="display: none;">
+    <tbody>
+    <tr>
+      <td><span class="label secondary">3 ABONOS DE</span></td>
+      <td id="ImporteAbono3">0.00</td>
+      <td id="plazo3">0.00</td>
+      <td id="Importe_Ahorra3">0.00</td>
+      <td> <input type="radio" name="Importe_Ahorra_check" value="3" id="Importe_Ahorra_check_3" required></td>
+    </tr>
+    <tr>
+      <td><span class="label secondary">6 ABONOS DE</span></td>
+      <td id="ImporteAbono6">0.00</td>
+      <td id='plazo6'>0.00</td>
+      <td id='Importe_Ahorra6'>0.00</td>
+      <td><input type="radio" name="Importe_Ahorra_check" value="6" id="Importe_Ahorra_check_6"></td>
+    </tr>
+    <tr>
+      <td><span class="label secondary">9 ABONOS DE</span></td>
+      <td id="ImporteAbono9">0.00</td>
+      <td id='plazo9'>0.00</td>
+      <td id='Importe_Ahorra9'>0.00</td>
+      <td><input type="radio" name="Importe_Ahorra_check" value="9" id="Importe_Ahorra_check_9"></td>
+    </tr>
+    <tr>
+      <td><span class="label secondary">12 ABONOS DE</span></td>
+      <td id="ImporteAbono12">0.00</td>
+      <td id='plazo12'>0.00</td>
+      <td id='Importe_Ahorra12'>0.00</td>
+      <td><input type="radio" name="Importe_Ahorra_check" value="12" id="Importe_Ahorra_check_12"></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+  
+
+
+
+
+
+
+<hr>
+
+ <div class="row">
+  <div class="medium-6 large-8 columns"></div>
+  <div class="medium-6 large-4 columns">
+    <section id="calculodeber">
+        <table class="unstriped">
+        <tbody>
+          <tr>
+            <td><span class="label secondary">Enganche:</span></td>
+            <td id="enganche">0.00</td>
+          </tr>
+          <tr>
+            <td><span class="label secondary">Bonificación Enganche:</span></td>
+            <td id='bonificacion'>0.00</td>
+          </tr>
+          <tr>
+            <td><span class="label secondary">Total:</span></td>
+            <td id='total'>0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+      
+      <a href="{% url "ventas:list" %}" class="button success" style="color: white;" id="Cancelar"><i class="fi-x"></i> <span style="padding-left: 5px;">Cancelar</span></a>
+        
+   
+
+          <form enctype="multipart/form-data" action="/ventas/nuevo" method="post" style="float: right;">
+
+              {% csrf_token %}
+                {{ forms.as_p}}
+         <button id='siguiente' type="submit"  class="button success" style="color: white;float: right;"><i class="fi-x"></i> <span style="padding-left: 5px;">Siguiente</span></button> 
+            </form>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+    <script type="text/javascript">
+      function quitar(clave_articulo){
+        $("#"+clave_articulo).remove();
+        articulo_json[clave_articulo] = undefined;
+        sumar();
+      }
+      
+      var modelo;
+      var clave_articulo;
+      var articulo_json= [];
+      var descripcion;
+      var existencia;
+      var precio;
+      var importe=0;
+      var enganche;
+      var total= 0;
+      var tasa;
+      var plazo;
+      var Total_Pagar=0;
+      var precio_contado=0;
+      var tasa_financiamiento;
+      var plazo3,plazo6,plazo9,plazo12;
+      var ImporteAbono3,ImporteAbono6,ImporteAbono9,ImporteAbono12;
+      var Importe_Ahorra3,Importe_Ahorra6,Importe_Ahorra9,Importe_Ahorra12;
+      var numero_abonos,abono,ahorro,total_a_pagar;
+      var ids_articulos = [];
+      function sumar (clave_articulo,valor) {
+        if (clave_articulo != undefined && valor != undefined ) {
+            precio = $("#precio"+clave_articulo).text();
+            importe = precio * valor;
+            $("#importe"+clave_articulo).text(importe.toFixed(2));
+        }
+        var total = 0;
+        ids_articulos.length = 0;
+        $(".importe").each(function() {
+          if (isNaN(parseFloat($(this).text()))) {
+            total += 0;
+          } else {
+            total += parseFloat($(this).text());
+          }
+            ids_articulos.push( $(this).attr("title") );
+
+        });
+        console.log(ids_articulos);
+        $('#id_articulo').val(ids_articulos);
+        enganche_articulo = ( enganche/100)* total;
+        $("#enganche").text(enganche_articulo.toFixed(2));
+        $("#bonificacion").text(($("#enganche").text()*tasa).toFixed(2));
+        $("#total").text((total-enganche_articulo-$("#bonificacion").text()).toFixed(2));
+        Total_Pagar=(total-enganche_articulo-$("#bonificacion").text()).toFixed(2);
+        precio_contado=Total_Pagar/(1+(tasa));
+
+        console.log(tasa_financiamiento);
+        console.log(precio_contado);
+        console.log(precio_contado*(1+(parseFloat(tasa_financiamiento)*3)/100));
+
+        plazo3 = precio_contado*(1+(tasa_financiamiento*3)/100);
+        plazo6 = precio_contado*(1+(tasa_financiamiento*6)/100);
+        plazo9 = precio_contado*(1+(tasa_financiamiento*9)/100);
+        plazo12 = precio_contado*(1+(tasa_financiamiento*12)/100);
+
+        ImporteAbono3 = plazo3/ 3;
+        ImporteAbono6 = plazo6/ 6;
+        ImporteAbono9 = plazo9/ 9;
+        ImporteAbono12 = plazo12/ 12;
+
+        Importe_Ahorra3 = Total_Pagar - plazo3;
+        Importe_Ahorra6 = Total_Pagar - plazo6;
+        Importe_Ahorra9 = Total_Pagar - plazo9;
+        Importe_Ahorra12 = Total_Pagar - plazo12;
+
+        $("#plazo3").text("TOTAL A PAGAR $ "+plazo3.toFixed(2));
+        $("#plazo3").attr({"title":plazo3.toFixed(2)});
+        $("#plazo6").text("TOTAL A PAGAR $ "+plazo6.toFixed(2));
+        $("#plazo6").attr({"title":plazo6.toFixed(2)});
+        $("#plazo9").text("TOTAL A PAGAR $ "+plazo9.toFixed(2));
+        $("#plazo9").attr({"title":plazo9.toFixed(2)});
+        $("#plazo12").text("TOTAL A PAGAR $ "+plazo12.toFixed(2));
+        $("#plazo12").attr({"title":plazo12.toFixed(2)});
+        $("#ImporteAbono3").text("$ "+ImporteAbono3.toFixed(2));
+        $("#ImporteAbono6").text("$ "+ImporteAbono6.toFixed(2));
+        $("#ImporteAbono9").text("$ "+ImporteAbono9.toFixed(2));
+        $("#ImporteAbono12").text("$ "+ImporteAbono12.toFixed(2));
+        $("#Importe_Ahorra3").text("SE AHORRA $"+Importe_Ahorra3.toFixed(2));
+        $("#Importe_Ahorra3").attr({"title":Importe_Ahorra3.toFixed(2) });
+        $("#Importe_Ahorra6").text("SE AHORRA $"+Importe_Ahorra6.toFixed(2));
+        $("#Importe_Ahorra6").attr({"title":Importe_Ahorra6.toFixed(2) });
+        $("#Importe_Ahorra9").text("SE AHORRA $"+Importe_Ahorra9.toFixed(2));
+        $("#Importe_Ahorra9").attr({"title":Importe_Ahorra9.toFixed(2) });
+        $("#Importe_Ahorra12").text("SE AHORRA $"+Importe_Ahorra12.toFixed(2));
+        $("#Importe_Ahorra12").attr({"title":Importe_Ahorra12.toFixed(2) });
+
+        if (parseInt($("#total").text()) != 0 &&  $("#id_cliente_complete").val() != '' ) {
+          $("#siguiente").attr("disabled", false);
+        }else{
+
+          $("#siguiente").attr("disabled", true);
+        }
+      }
+      $(function() {
+        //iniciamos
+        $("#siguiente").attr("disabled", true);
+
+        $("#siguiente").on("click",function(){
+          if ($("#siguiente").text()=='Guardar') {
+
+              if ($("#Importe_Ahorra_check_3").is(":checked") || $("#Importe_Ahorra_check_6").is(":checked") || $("#Importe_Ahorra_check_9").is(":checked") || $("#Importe_Ahorra_check_12").is(":checked")) {
+
+
+                if ($("#Importe_Ahorra_check_3").is(":checked")) {
+                  numero_abonos='3'; abono=$("#ImporteAbono3").text(); ahorro = $("#Importe_Ahorra3").attr("title");
+                  total_a_pagar = $("#plazo3").attr("title");
+
+                }
+                if ($("#Importe_Ahorra_check_6").is(":checked")) {
+                  numero_abonos='6'; abono=$("#ImporteAbono6").text(); ahorro = $("#Importe_Ahorra6").attr("title");
+                  total_a_pagar = $("#plazo6").attr("title");
+
+                }
+                if ($("#Importe_Ahorra_check_9").is(":checked")) {
+                  numero_abonos='9'; abono=$("#ImporteAbono9").text(); ahorro = $("#Importe_Ahorra9").attr("title");
+                  total_a_pagar = $("#plazo9").attr("title");
+
+                }
+                if ($("#Importe_Ahorra_check_12").is(":checked")) {
+                  numero_abonos='12'; abono=$("#ImporteAbono12").text(); ahorro = $("#Importe_Ahorra12").attr("title");
+                  total_a_pagar = $("#plazo12").attr("title");
+
+                }
+
+                $('#id_cliente').val(   $( "#id_cliente_complete" ).attr("title")  );
+                $('#id_plazo').val(   numero_abonos  );
+                $('#id_abono').val(   abono  );
+                $('#id_ahorro').val(   ahorro  );
+                $('#id_total_a_pagar').val(   total_a_pagar  );
+                $('#id_usuario_registro').val({{Perfil.user.id}});
+
+            }else{
+              alert("elige un plazo");
+              event.preventDefault();
+              return false;
+            }
+
+          }else{
+            event.preventDefault();
+          }
+          $("#ventaoperacion").hide();
+          $("#calculodeber").hide();
+          $("#elejirplazo").show();
+          $("#siguiente").text("Guardar");
+        });
+        $("#Cancelar").on("click",function(){
+
+          if ($("#elejirplazo").is(':visible')) {
+            $("#ventaoperacion").show();
+            $("#calculodeber").show();
+            $("#elejirplazo").hide();
+            $("#siguiente").text("Siguiente")
+            return false
+          }else{
+            var r = confirm("Estas seguro de Salir...?");
+            if (r == true) {
+                txt = "You pressed OK!";
+            } else {
+                return false
+            }
+          }
+          
+        });
+        $("#agregarArticulo").on("click",function(){
+          if (articulo_json[clave_articulo]==undefined) {
+              articulo_json[clave_articulo] = clave_articulo;
+              $("#articulos_agregados").append("<tr id='"+clave_articulo+"'><td>"+descripcion+"</td><td>"+modelo+"</td><td><input type='number' placeholder='cantidad' id='chan"+clave_articulo+"' onchange='sumar("+clave_articulo+",this.value);' min='1' value='1' max='"+existencia+"'></td><td id='precio"+clave_articulo+"'>"+precio+"</td><td id='importe"+clave_articulo+"' class='importe' title='"+clave_articulo+"'>"+precio+"</td><td><a href='#' onclick='quitar("+clave_articulo+")'><i class='fi-x'></i></a> </td></tr>  ");
+              importe = importe + precio;
+              var enganche_articulo = ( enganche/100)* importe;
+              $("#enganche").text(enganche_articulo.toFixed(2));
+              $("#bonificacion").text(($("#enganche").text()*tasa).toFixed(2));
+              $("#total").text((importe-enganche_articulo-$("#bonificacion").text()).toFixed(2));
+              sumar();
+               $( "#id_articulo_complete" ).val('');
+          }
+          $("#chan"+clave_articulo).focus();
+        });
+        $('#id_cliente_complete').on('input',function(e){
+          if (parseInt($("#total").text()) != 0 &&  $("#id_cliente_complete").val() != '' ) {
+                $("#siguiente").attr("disabled", false);
+            }else{
+                  $("#siguiente").attr("disabled", true);
+            }
+        });
+        $("#id_cliente_complete").autocomplete({
+          source: "/ventas/autocomplete/",
+          minLength: 2,
+          focus: function( event, ui ) {
+            $( "#id_cliente_complete" ).val( ui.item.label );
+            return false;
+          },
+            select: function( event, ui ) {
+              $( "#id_cliente_complete" ).val(ui.item.id +"   " +ui.item.label  );
+              $( "#id_cliente_complete" ).attr({"title":ui.item.id});
+
+              $( "#cliente_rfc" ).text("RFC: "+ui.item.value );
+              return false;
+            }
+        });
+        $("#id_articulo_complete").autocomplete({
+          source: "/ventas/autocompletearticulo/",
+          minLength: 2,
+          focus: function( event, ui ) {
+            $( "#id_articulo_complete" ).val( ui.item.label );
+            return false;
+          },
+            select: function( event, ui ) {
+              $( "#id_articulo_complete" ).val(ui.item.id +"   " +ui.item.label  );
+              modelo = ui.item.descripcion;
+              clave_articulo = ui.item.id;
+              descripcion  = ui.item.label;
+              existencia = ui.item.existencia;
+              precio = ui.item.precio;
+              enganche = ui.item.porcentaje_enganche;
+              tasa = ui.item.tasa;
+              plazo = ui.item.plazo;
+              tasa_financiamiento= ui.item.tasa_financiamiento;
+              if (existencia==0) {
+                $("#agregarArticulo").attr("disabled", true);
+                alert("El artículo seleccionado no cuenta con existencia, favor de verificar");
+              }else{
+                $("#agregarArticulo").attr("disabled", false);
+              }
+
+              return false;
+            }
+        });
+        
+      });
+
+    </script>
+{% endblock %}

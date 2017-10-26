@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+	{% load staticfiles %}
+	<meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %} {% endblock %}</title>
+	<link rel="stylesheet" href="{% static 'icons/foundation-icons.css' %}">
+
+	<link rel="stylesheet" href="{% static 'css/foundation-6.3.1/css/foundation.css' %}">
+	
+	<link href="https://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/foundation-6.3.1/css/base.css' %}">
+    {% block links %}
+	{% endblock %}
+</head>
+<body>
+<div class="row">
+  	<div class="small-12 columns">
+		<header>
+
+				<div class="title-bar" data-responsive-toggle="example-animated-menu" data-hide-for="medium">
+			  		<button class="menu-icon" type="button" data-toggle></button>
+				 	 <div class="title-bar-title">Vendimia</div>
+				</div>
+				
+				<div class="top-bar" id="example-animated-menu" data-animate="hinge-in-from-top spin-out">
+				  <div class="top-bar-left">
+				    <ul class="dropdown menu" data-dropdown-menu>
+				      <li class="menu">
+				      	
+				      	<i class="fi-tags"></i>
+				      	<img  src="{% static 'img/midler_logo.png'%}" alt="Photo of Uranus."></li>
+				    </ul>
+				  </div>
+				 {% if user and user.is_authenticated and user.is_active and Perfil.outsourcing %}
+				  <div class="top-bar-right">
+				     <ul class="dropdown menu" data-dropdown-menu>
+				      {{Perfil}}
+				      {% if Perfil.outsourcing.imagen %}
+				      <li class="menu-text">
+					      	<img id="avatar" class="thumbnail-radius" src="{{Perfil.outsourcing.imagen.url}}" alt="Photo of Uranus.">&nbsp;{{Perfil.outsourcing}}
+					      	</li>
+					      	{% endif %}
+				      <li>
+				      {% if user and not user.is_anonymous %}
+				          {% if  Perfil %}
+							   	 	    <a href="#"><img id="avatar" class="thumbnail-radius" src="{{Perfil.avatar.url}}" alt="Photo of Uranus."></a>{% endif %}
+										<ul class="vertical menu">
+											 <li><a>{{ user.get_full_name }}.</a></li>
+											 <li> <a href="{% url "usuarios:perfil" Perfil.id %}">{{ user.get_full_name }}</a></li> 
+
+											<li> <a href="{% url 'logout' %}">Logout</a></li>
+								 		</ul>
+							{% else %}
+				        {% endif %}
+				      </li>
+				    </ul>
+				  </div>
+				   {% else %}
+				   <div class="top-bar-right">
+					     <ul class="dropdown menu" data-dropdown-menu>
+					      <li>
+					      {% if user and not user.is_anonymous %}
+					          {% if  Perfil %}
+								   	 	    <a href="#"><img id="avatar" class="thumbnail-radius" src="{{Perfil.avatar.url}}" alt="Photo of Uranus."></a>{% endif %}
+											<ul class="vertical menu">
+
+												 <li> <a href="{% url "usuarios:perfil" Perfil.id %}">{{ user.get_full_name }}</a></li> 
+
+												<li> <a href="{% url 'logout' %}">Logout</a></li>
+									 		</ul>
+								{% else %}
+					        {% endif %}
+					      </li>
+					    </ul>
+					  </div>
+
+				</div>
+				   
+				  {% endif %}
+		
+		</header>
+	</div>
+	<div class="small-12 columns">
+	  	<div class="row align-center">
+		  	{% if user and user.is_authenticated %}
+		  		{% if  Perfil %}
+			  	<div class="small-12 medium-2 columns">
+			  		<div class="title-bar" data-responsive-toggle="example-menu" data-hide-for="medium">
+					  <button class="menu-icon" type="button" data-toggle="example-menu"></button>
+					  <div class="title-bar-title">Menu Izquierdo</div>
+					</div>
+					<nav class="hover-underline-menu" id="example-menu" data-menu-underline-from-center >
+					{# <ul class="vertical menu align-center dropdown  medium-horizontal" data-responsive-menu="drilldown medium-accordion" style="max-width: 250px;"> #}
+						<ul class="vertical menu align-center dropdown" data-responsive-menu="drilldown medium-accordion">
+						    <li class="{% block active_ventas %}
+						{% endblock %}" >
+								<a href="{% url "ventas:list" %}" >Ventas</a>
+							</li>
+						    <li  class="{% block active_clientes %}
+						{% endblock %}">
+						    	<a href="{% url "usuarios:list" %}">Clientes</a>
+						    </li>
+						    <li  class="{% block active_articulos %}
+						{% endblock %}">
+						    	<a href="{% url "articulos:list" %}">Articulos</a>
+						    </li>
+						     <li  class="{% block active_confs %}
+						{% endblock %}">
+						    	<a href="{% url "articulos:configuracion" %}">Configuración</a>
+						    </li>
+						</ul>
+					</nav>
+			  	</div>
+			  	{% endif %}
+		  	{% endif %}
+		  	{% if user and user.is_authenticated %}
+				<div class="small-12 medium-10 columns">
+		  	{%else%} 
+				<div class="small-12 medium-12 columns">
+		  	{% endif %}
+		  		{% if user and user.is_authenticated and not Perfil %}
+					<center>
+						<ul class="steps">
+					        <li {% if user.is_active %}class="active"{% endif %}>Confirmación {% if Perfil and user.is_active  %}&nbsp;<i class="fi-check"></i> {% endif %}</li>
+					        <li {% if Perfil.outsourcing %}class="active"{% endif %}><a href="/" style="color: black;">La Vendimia</a> {% if Perfil.outsourcing %}&nbsp;<i class="fi-check"></i> {% endif %}</li>
+					    </ul>
+					</center>
+		  		
+
+			    {% endif %}
+		  			{% block content %}
+					{% endblock %}
+				
+		  		</div>
+	  	</div>
+	</div>
+  	<section>
+  		{% block pagination %}
+		  {% if is_paginated %}
+		      <div class="pagination">
+		          <span class="page-links">
+		              {% if page_obj.has_previous %}
+		                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+		              {% endif %}
+		              <span class="page-current">
+		                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+		              </span>
+		              {% if page_obj.has_next %}
+		                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+		              {% endif %}
+		          </span>
+		      </div>
+		  {% endif %}
+		{% endblock %}
+	</section>
+</div>
+	
+	
+	<footer>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="{% static 'css/foundation-6.3.1/js/vendor/what-input.js'%}"></script>
+    <script src="{% static 'css/foundation-6.3.1/js/vendor/foundation.js'%}"></script>
+    <script src="{% static 'js/base.js'%}"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+		<script type="text/javascript">
+			$(".pagination").css({"float":"right"});
+			$(".pagination a").addClass("button");
+		</script>
+  
+  
+		{% block footer %}
+		{% endblock %}
+	</footer>
+</body>
+</html>
+

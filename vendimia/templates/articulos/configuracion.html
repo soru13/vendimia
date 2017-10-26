@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+    Configuración
+{% endblock %}
+
+{% block active_confs %}
+  active
+{% endblock %}
+{% block content %}
+  <h2>Configuración</h2>
+  <form method="POST">
+    {% csrf_token %}
+      {{ form.as_p}}
+      <button type="submit" class="small button">Guardar</button>
+  </form>
+
+{% endblock %}
+
+{% block footer %}
+<script type="text/javascript">
+    $("#id_usuario_registro").val({{Perfil.user.id}});
+  </script>
+{% endblock %}

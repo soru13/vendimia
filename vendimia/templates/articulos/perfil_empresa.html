@@ -1,0 +1,160 @@
+
+
+{% extends "base.html" %}
+{% block title %}
+    Empresa
+{% endblock %}
+
+{% block content %}
+
+<form method="POST" action="/empresas/agregar/" enctype="multipart/form-data" accept-charset="UTF-8" role="form"> {% csrf_token %}
+          <input type="hidden" name="usuario_registro" value="{{Perfil.user.id}}">
+
+{% if error %} 
+
+
+<div class="success callout" data-closable="slide-out-right">
+  <h5>mensaje</h5>
+  <p>{{error}}</p>
+  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+{%endif%} 
+
+
+ {% if form.instance.id %}
+    <input type="hidden" name="id" value="{{form.instance.id}}">
+    <input type="hidden" name="id_contacto" value="{{contacto.id}}">
+    <input type="hidden" name="id_perfil" value="{{Perfil.id}}">
+
+  {% endif %} 
+
+        <h4>Datos Generales</h4> <hr>
+
+        <label for="id_nombre"> Nombre de la Empresa</label>
+        {{ form.nombre }}
+        <label for="id_url">Url</label>
+        {{ form.url }}
+        <label for="id_imagen" class="button">Subir Logo</label>
+        {{ form.imagen }}
+        <label for="id_giro">Giro</label>
+        {{ form.giro }}
+        <label for="id_actividad">Actividad</label>
+        {{ form.actividad }}
+
+        <label for="id_telefono">Telefono</label>
+        {{ form.telefono }}
+
+        <h4>Datos de Facturación</h4> <hr>
+        <label for="id_rfc">Rfc</label>
+        {{ form.rfc }}
+        <label for="id_razonSocial">RazonSocial</label>
+        {{ form.razonSocial }}
+        <label for="id_pais">Pais</label>
+        {{ form.pais }}
+        <label for="id_estado">Estado</label>
+        {{ form.estado }}
+        <label for="id_municipio">Municipio</label>
+        {{ form.municipio }}
+        <label for="id_ciudad">Ciudad</label>
+        {{ form.ciudad }}
+        <label for="id_calle">Calle</label>
+        {{ form.calle }}
+        <label for="id_colonia">Colonia</label>
+        {{ form.colonia }}
+        
+        <label for="id_codigoPostal">CodigoPostal</label>
+        {{ form.codigoPostal }}
+        <label for="id_numeroEXterior">Numero EXterior</label>
+        {{ form.numeroEXterior }}
+        <label for="id_numeroInterior">Numero Interior</label>
+        {{ form.numeroInterior }}
+        <label for="id_correo">Correo</label>
+        {{ form.correo }}
+
+  {% for contacto in contactos %}
+    <div class="col-sm-12 col-lg-6">
+      <div class="box">
+        <div class="box-header with-border">
+          <h4 class="box-title">Contacto</h4>
+          <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" id="editar_contacto{{contacto.id}}" data-id="{{contacto.id}}" data-idempresa="{{contacto.empresa.id}}">
+              <i class="fa fa-edit"></i>
+            </button>
+            <button class="btn btn-box-tool" id="eliminar_contacto{{contacto.id}}" data-id="{{contacto.id}}">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <div class="box-body">
+            <strong>Nombre:</strong> {{ contacto.nombre_contacto }} <br>
+            <strong>Puesto:</strong> {{ contacto.puesto }} <br>
+            <strong>Email:</strong> {{ contacto.email }} <br>
+            <strong>Teléfono:</strong> {{ contacto.telefono_contacto }}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <h4>Contacto</h4> <hr>
+          {% if form_contacto %}
+          {{ form_contacto }}
+          {% endif %}
+
+    <button type="submit" class="small button">Aceptar</button>
+     <button type="submit" id="cancelar" class="small button">Cancelar</button>
+</form>
+
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+
+<script type="text/javascript" charset="utf-8">
+(function(){
+
+    // Attach the change event listener to change the label of all input[type=file] elements
+    var els = document.querySelectorAll("input[type=file]"),
+        i;
+    for (i = 0; i < els.length; i++) {
+        els[i].addEventListener("change", function() {
+            var label = this.previousElementSibling;
+            label.innerHTML = this.files[0].name;
+        });
+    }
+
+})();
+  $('#cancelar').on('click', function (e){
+    e.preventDefault();
+    window.location = '/empresas/agregar/'
+  });
+  $('[id^=eliminar_contacto]').on('click', function (e){
+    e.preventDefault();
+    var confirmacion = confirm("¿Está seguro de eliminar este contacto?");
+    if (confirmacion == true) {
+      var id = $(e.currentTarget).data('id');
+      window.location = '/empresas/eliminar/contacto/' + id;
+    }
+  });
+
+  $('[id^=editar_contacto]').on('click', function (e){
+    e.preventDefault();
+    var id = $(e.currentTarget).data('id');
+    var idempresa = $(e.currentTarget).data('idempresa');
+    window.location = '/empresas/editar/'+idempresa+'/' + id;
+  });
+
+  $(function () {
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_square-blue',
+      radioClass: 'iradio_square-blue',
+      increaseArea: '20%' // optional
+    });
+  });
+
+</script>
+{% endblock %}

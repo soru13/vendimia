@@ -1,0 +1,44 @@
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+	Login
+{% endblock %}
+
+{% block content %}
+	{% if not user.is_authenticated %}
+
+
+	<center>
+		<h1>Bienvenido a La Vendimia</h1>
+	 <h3>Inicia sesión</h3>
+	</center>
+	 <div class="row align-center" id="login">
+	 	
+	 	
+		<div class="small-12 medium-12 columns">
+				<center>
+					<h4>Con tu Email</h4>
+				</center><br>
+				
+				<form method="post" action="{% url 'login' %}">
+				{% csrf_token %}
+					<p>Correo electrónico:</p>
+				    {{ form.username }}
+				    <p>Contraseña:</p>
+				    {{ form.password }}
+
+				<input type="submit" class="btn-Green button" value="Inicia Sesión" />
+				<input type="hidden" name="next" value="{{ next }}" />
+				</form>
+		</div>
+		¿Aún no tienes cuenta? Regístrate&nbsp; <a href="{% url "usuarios:new" %}" > aquí</a>
+
+	</div>
+	{% endif %}
+{% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
+{% endblock %}
+
+

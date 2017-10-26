@@ -1,0 +1,46 @@
+
+#login{
+  border: 2px solid #7fc719;
+  border-radius: 10px;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  margin: 0px 0.1px;
+}
+h1,h2,h3,h4,h5,h6{
+  color:  #1c3643;
+}
+
+/*social*/
+
+.social{
+  text-align: left;
+}
+.social.facebook {
+  background-color: #3b5998;
+  color: #fefefe;
+  width: 278px;
+}
+.social i{
+  margin-right: 7px;
+  border-radius: .4em;
+}
+.social.facebook:hover, .social.facebook:focus {
+  background-color: #2f477a;
+  color: #fefefe;
+}
+
+.social.twitter {
+  background-color: #55acee;
+  color: #fefefe;
+  width: 278px;
+}
+
+.social.twitter:hover, .social.twitter:focus {
+  background-color: #1a8fe8;
+  color: #fefefe;
+}
+.social > .fi {
+  color: #fefefe;
+  margin-right: .25rem;
+}
+

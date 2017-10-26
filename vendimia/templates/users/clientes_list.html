@@ -1,0 +1,44 @@
+
+
+{% extends "base.html" %}
+{% block title %}
+    Clientes
+{% endblock %}
+{% block active_clientes %}
+active
+{% endblock %}
+{% block content %}
+
+<p style="text-align: right;">
+    <a href="{% url "usuarios:new" %}" class="button"><i class="fi-plus"></i> <span style="padding-left: 5px;">Nueva Cliente</span></a>
+</p>
+<table class="hover">
+  <thead>
+    <tr>
+      <th width="200">Clave Cliente</th>
+      <th>Nombre</th>
+    </tr>
+  </thead>
+  <tbody>
+     {% for client in object_list %}
+        <tr>
+          <td>{{ client.id }}</td>
+          <td>{{ client.nombre }} {{ client.apellido_paterno }} {{ client.apellido_materno }}</td>
+          <td>
+                <a href="{% url "usuarios:edit" client.id %}"><i class="fi-page-edit"></i></a> &nbsp;&nbsp;
+                <a href="{% url "usuarios:deletCliente" client.id %}"><i class="fi-x"></i></a> 
+          </td>
+
+        </tr>
+     {% endfor %}               
+   
+
+  </tbody>
+</table>
+{% endblock %}
+
+
+
+
+
+
