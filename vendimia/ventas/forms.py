@@ -7,9 +7,12 @@ class VentasForm(forms.ModelForm):
     """ """
     class Meta:
         model = Ventas
-        fields = ['articulo','cliente','plazo','abono','ahorro','total_a_pagar','usuario_registro']
+        fields = ['articulo','cliente','plazo','abono','ahorro','total_a_pagar','usuario_registro','cantidad']
+        labels = {
+            'articulo': _(''),
+        }
         widgets = {
-        # 'articulo': widgets.TextInput(attrs={"type":"hidden"}),
+        'cantidad':widgets.TextInput(attrs={"type":"hidden"}),
         'cliente': widgets.TextInput(attrs={"type":"hidden"}),
         'plazo': widgets.TextInput(attrs={"type":"hidden"}),
         'abono': widgets.TextInput(attrs={"type":"hidden"}),

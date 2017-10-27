@@ -26,17 +26,17 @@ class ArticuloDelete(LoginRequired,DeleteView):
             context['Perfil'] = Perfil.objects.get(user__username=self.request.user.username)
         # And so on for more models
         return context
-class ArticuloUpdate(LoginRequired,UpdateView):
-    model = Articulos
-    success_url = reverse_lazy('articulos:list')
-    fields = ['descripcion','modelo','precio','existencia']
-    def get_context_data(self, **kwargs):
-        context = super(ArticuloUpdate, self).get_context_data(**kwargs)
-        if self.request.user:
-            context['Perfil'] = Perfil.objects.get(user__username=self.request.user.username)
-        # And so on for more models
-        return context
 
+class ArticuloUpdate(LoginRequired,UpdateView):
+	form_class = ArticulosForm
+	model = Articulos
+	success_url = reverse_lazy('articulos:list')
+	def get_context_data(self, **kwargs):
+		context = super(ArticuloUpdate, self).get_context_data(**kwargs)
+		if self.request.user:
+			context['Perfil'] = Perfil.objects.get(user__username=self.request.user.username)
+		# And so on for more models
+		return context
 
 # Create your views here.
 class ArticulosList(LoginRequired,ListView):
@@ -83,12 +83,17 @@ class ArticulosCreation(LoginRequired,CreateView):
 	form_class = ArticulosForm
 	model = Articulos
 	success_url = reverse_lazy('articulos:list')
+
 	def get_context_data(self, **kwargs):
 		context = super(ArticulosCreation, self).get_context_data(**kwargs)
 		if self.request.user:
 			perfil = Perfil.objects.get(user__username=self.request.user.username)
 			context['Perfil'] = perfil
-			context['articulos'] = Articulos.objects.filter().count()+1
+			if Articulos.objects.count() != 0:
+				context['articulos'] = Articulos.objects.latest('id').id +1
+			else:
+				context['articulos'] =1
+			
 			if Configuracion.objects.filter().count() == 1:
 				context['configuracion'] = Configuracion.objects.filter()[0]
 		# And so on for more models

@@ -82,7 +82,12 @@ def NuevoUsuario(request):
         else:
             formulario = ClientesForm()
             perfil = Perfil.objects.get(user__username=request.user.username)
-            clientes = Clientes.objects.filter().count()+1
+
+            clientes = 0
+            if Clientes.objects.count() != 0:
+                clientes = Clientes.objects.latest('id').id +1
+            else:
+                clientes =1
             return  render(request, 'users/users_form.html', {'form':formulario,'Perfil':perfil,'clientes':clientes })
     else:
         if request.method == 'POST':
@@ -215,9 +220,9 @@ def send_simple_message_forgot_Password(email,uid,token,user):
               })
 
 class ClienteUpdate(LoginRequired,UpdateView):
+    form_class = ClientesForm
     model = Clientes
     success_url = '/clientes'
-    fields = ['nombre','apellido_paterno','apellido_materno','rfc']
     def get_context_data(self, **kwargs):
         context = super(ClienteUpdate, self).get_context_data(**kwargs)
         if self.request.user:

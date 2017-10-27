@@ -27,7 +27,7 @@ class ArticulosForm(forms.ModelForm):
         model = Articulos
         fields = ['descripcion','modelo','precio','existencia','usuario_registro','configuracion']
         widgets = {
-        'descripcion': widgets.TextInput(attrs={"type":"text","pattern":"[a-zA-Z0]+","placeholder" : 'Descripcion',"maxlength" : '40','title':'Descripcion','required':True}),
+        'descripcion': widgets.TextInput(attrs={"type":"text","placeholder" : 'Descripcion',"maxlength" : '40','title':'Descripcion','required':True}),
         'modelo': widgets.TextInput(attrs={"type":"text","placeholder" : 'Modelo', "maxlength" : '40' ,'title':'Modelo','required':True}),
         'precio': widgets.TextInput(attrs={"type":"number","placeholder" : 'Precio', "maxlength" : '40' ,'title':'Precio','required':True}),
         'existencia': widgets.TextInput(attrs={"type":"number","placeholder" : 'Existencia', "maxlength" : '40' ,"min" : '0' ,'title':'Existencia','required':True}),

@@ -123,6 +123,7 @@ active
 
               {% csrf_token %}
                 {{ forms.as_p}}
+
          <button id='siguiente' type="submit"  class="button success" style="color: white;float: right;"><i class="fi-x"></i> <span style="padding-left: 5px;">Siguiente</span></button> 
             </form>
 
@@ -158,14 +159,28 @@ active
       var Importe_Ahorra3,Importe_Ahorra6,Importe_Ahorra9,Importe_Ahorra12;
       var numero_abonos,abono,ahorro,total_a_pagar;
       var ids_articulos = [];
+      var articulo = [];
       function sumar (clave_articulo,valor) {
         if (clave_articulo != undefined && valor != undefined ) {
             precio = $("#precio"+clave_articulo).text();
             importe = precio * valor;
             $("#importe"+clave_articulo).text(importe.toFixed(2));
+
+
+
+          
         }
         var total = 0;
         ids_articulos.length = 0;
+        articulo.length = 0;
+      
+
+        console.log("articulo");
+        console.log(articulo);
+        console.log("articulo");
+
+
+
         $(".importe").each(function() {
           if (isNaN(parseFloat($(this).text()))) {
             total += 0;
@@ -176,6 +191,15 @@ active
 
         });
         console.log(ids_articulos);
+        for (var i = 0; i < ids_articulos.length; i++) {
+          
+          console.log( ids_articulos[i] );
+            clave = ids_articulos[i];
+            var item = clave +","+$("#chan"+ids_articulos[i]).val();
+            articulo.push(item);
+        }
+
+
         $('#id_articulo').val(ids_articulos);
         enganche_articulo = ( enganche/100)* total;
         $("#enganche").text(enganche_articulo.toFixed(2));
@@ -227,13 +251,14 @@ active
         if (parseInt($("#total").text()) != 0 &&  $("#id_cliente_complete").val() != '' ) {
           $("#siguiente").attr("disabled", false);
         }else{
-
           $("#siguiente").attr("disabled", true);
         }
       }
       $(function() {
         //iniciamos
         $("#siguiente").attr("disabled", true);
+        $("#id_articulo").hide();
+        $("form p").hide();
 
         $("#siguiente").on("click",function(){
           if ($("#siguiente").text()=='Guardar') {
@@ -268,6 +293,7 @@ active
                 $('#id_ahorro').val(   ahorro  );
                 $('#id_total_a_pagar').val(   total_a_pagar  );
                 $('#id_usuario_registro').val({{Perfil.user.id}});
+                $("#id_cantidad").val(articulo);
 
             }else{
               alert("elige un plazo");
@@ -304,7 +330,7 @@ active
         $("#agregarArticulo").on("click",function(){
           if (articulo_json[clave_articulo]==undefined) {
               articulo_json[clave_articulo] = clave_articulo;
-              $("#articulos_agregados").append("<tr id='"+clave_articulo+"'><td>"+descripcion+"</td><td>"+modelo+"</td><td><input type='number' placeholder='cantidad' id='chan"+clave_articulo+"' onchange='sumar("+clave_articulo+",this.value);' min='1' value='1' max='"+existencia+"'></td><td id='precio"+clave_articulo+"'>"+precio+"</td><td id='importe"+clave_articulo+"' class='importe' title='"+clave_articulo+"'>"+precio+"</td><td><a href='#' onclick='quitar("+clave_articulo+")'><i class='fi-x'></i></a> </td></tr>  ");
+              $("#articulos_agregados").append("<tr id='"+clave_articulo+"' title='"+clave_articulo+"'><td>"+descripcion+"</td><td>"+modelo+"</td><td><input type='number' name='cantidad' placeholder='cantidad' id='chan"+clave_articulo+"' onchange='sumar("+clave_articulo+",this.value);' min='1' value='1' max='"+existencia+"'></td><td id='precio"+clave_articulo+"'>"+precio+"</td><td id='importe"+clave_articulo+"' class='importe' title='"+clave_articulo+"'>"+precio+"</td><td><a href='#' onclick='quitar("+clave_articulo+")'><i class='fi-x'></i></a> </td></tr>  ");
               importe = importe + precio;
               var enganche_articulo = ( enganche/100)* importe;
               $("#enganche").text(enganche_articulo.toFixed(2));
@@ -312,6 +338,7 @@ active
               $("#total").text((importe-enganche_articulo-$("#bonificacion").text()).toFixed(2));
               sumar();
                $( "#id_articulo_complete" ).val('');
+
           }
           $("#chan"+clave_articulo).focus();
         });

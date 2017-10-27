@@ -35,6 +35,7 @@ class Clientes(SaveTheChange, models.Model):
     def delete(self):
         BorradoLogico(self)
     class Meta:
+        ordering = ["-id"]
         verbose_name = 'Clientes'
         verbose_name_plural = 'Clientes'
     def __unicode__(self):

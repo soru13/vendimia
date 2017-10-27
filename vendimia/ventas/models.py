@@ -17,6 +17,7 @@ class Ventas(SaveTheChange, models.Model):
     plazo = models.CharField(max_length=13, blank=False, null=False)
     abono = models.CharField(max_length=13, blank=False, null=False)
     ahorro = models.CharField(max_length=13, blank=False, null=False)
+    cantidad = models.CharField(max_length=133, blank=False, null=False)
     total_a_pagar = models.CharField(max_length=13, blank=False, null=False)
     fecha_registro = models.DateTimeField(auto_now_add=True)
     is_active = models.DateTimeField(blank=True, null=True)
@@ -27,6 +28,7 @@ class Ventas(SaveTheChange, models.Model):
     def delete(self):
         BorradoLogico(self)
     class Meta:
+        ordering = ["-id"]
         verbose_name = 'Ventas'
         verbose_name_plural = 'Ventas'
     def __unicode__(self):

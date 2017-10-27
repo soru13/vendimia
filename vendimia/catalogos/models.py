@@ -10,7 +10,6 @@ class AuditLocal(models.Model):
     accion = models.CharField(max_length=1, db_index=True)
     fecha = models.DateTimeField(db_index=True)
     changed_fields = models.TextField(null=True)
-    junta = models.IntegerField(db_index=True)
     class Meta:
         ordering = ['id']
     def __unicode__(self):

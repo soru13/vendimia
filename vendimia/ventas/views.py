@@ -15,9 +15,11 @@ from articulos.models import Articulos
 from django.http import HttpResponse
 from .models import Ventas
 from .forms import VentasForm
+import ast
 import math
 try: import simplejson as json
 except ImportError: import json
+
 # from save_the_change.mixins import LoginRequiredMixin
 from django.views.generic.edit import (
     CreateView,
@@ -39,8 +41,12 @@ class VentasList(LoginRequired,ListView):
 @login_required(login_url = '/login')  
 def VentasNew(request):
     perfil = Perfil.objects.get(user__username=request.user.username)
-    ventas = Ventas.objects.filter()
-    return  render(request, 'ventas/ventas.html', {'forms':VentasForm(),'Perfil':perfil, 'ventas':ventas.count()+1  })
+    ventas = 0
+    if Ventas.objects.count() != 0:
+        ventas = Ventas.objects.latest('id').id +1
+    else:
+        ventas =1
+    return  render(request, 'ventas/ventas.html', {'forms':VentasForm(),'Perfil':perfil, 'ventas':ventas })
 
 class AutoCompleteView(FormView):
     def get(self,request,*args,**kwargs):
@@ -92,30 +98,75 @@ class AutoCompleteArticulosView(FormView):
             data = json.dumps(results)
         return HttpResponse(data, 'application/json')
 
-
+def esDivisible(num, divisor):
+    if(num % divisor == 0):
+        return True
+    else:
+        return False
+  
 class VentasCreation(LoginRequired,CreateView):
     form_class = VentasForm
     model = Ventas
     success_url = reverse_lazy('ventas:list')
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # <process form cleaned data>
+
+            
+
+            print  '---------------------------'
+            print request.POST['cantidad']
+            print request.POST['cantidad']
+
+
+
+
+            print  '---------------------------'
+            
+            form.save()
+            
+            venta = Ventas.objects.get(pk=Ventas.objects.latest('id').id)
+            
+            array_articulos =[] 
+            array_articulos  = request.POST['cantidad']
+            testarray = ast.literal_eval(array_articulos)
+            for index,x in enumerate(testarray):
+
+                if esDivisible(index,2):
+                    print index
+                    print  '---------------------------'
+                    articulo = testarray[index]
+                    print articulo
+                    print  '---------------------------'
+                    print testarray[index+1]
+                    print  '-----------adelantamos un index----------------'                    
+                    cantidad_articulo = testarray[index+1]
+
+                    art = Articulos.objects.get(pk=articulo)
+
+                    cantidad = int(art.existencia) - int(cantidad_articulo)
+
+                    print  '---------------------------'
+                    print art.descripcion
+                    print 'cantidad existencia'+str(art.existencia)
+                    print 'cantidad a descontar'+str(cantidad)
+                    print  '---------------------------'
+                    art.existencia = cantidad
+                    art.save()
+            return redirect('/ventas')
+
+
+        return render(request, self.template_name, {'form': form})
+
     def get_context_data(self, **kwargs):
         context = super(VentasCreation, self).get_context_data(**kwargs)
         if self.request.user:
             perfil = Perfil.objects.get(user__username=self.request.user.username)
             context['Perfil'] = perfil
-            context['ventas'] = Ventas.objects.filter().count()+1
+            # context['ventas'] = Ventas.objects.filter().count()+1
         # And so on for more models
         return context
-# class VentasUpdate(LoginRequired,UpdateView):
-#     model = Ventas
-#     success_url = reverse_lazy('ventas:list')
-# #     fields = ['nombre','imagen','url','giro','actividad','telefono','rfc','razonSocial','numeroInterior','numeroEXterior','calle','codigoPostal','ciudad','municipio','estado','pais',
-# # 'correo']
-#     def get_context_data(self, **kwargs):
-#         context = super(VentasUpdate, self).get_context_data(**kwargs)
-#         if self.request.user:
-#             context['Perfil'] = Perfil.objects.get(user__username=self.request.user.username)
-#         # And so on for more models
-#         return context
 
 class VentasDelete(LoginRequired,DeleteView):
     model = Ventas
