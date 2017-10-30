@@ -92,21 +92,17 @@ def NuevoUsuario(request):
     else:
         if request.method == 'POST':
             formulario = FormRegistroUsuario(request.POST)
-            print '--------------- entramos a post'
             if formulario.is_valid():
                 formulario.save()
-                print '--------------- guardando'
                 user = User.objects.get(username=request.POST['username'])
                 nombre_apellido =  request.POST['nombre_apellido']
                 array_name = nombre_apellido.split(" ")
                 print array_name
                 if len(array_name)==1:
                     user.first_name= array_name[0]
-                    print '--------------- first_name ' + array_name[0]
                 elif len(array_name)==2:
                     user.first_name= array_name[0]
                     user.last_name= array_name[1]
-                    print '--------------- last_name ' + array_name[1]
                 else:
                     user.first_name= array_name[0]
                 user.is_active = True
@@ -117,15 +113,10 @@ def NuevoUsuario(request):
                 clave = request.POST['password1']
                 auth_user = login_user(request,usuario,clave)     
                 if auth_user is not None:
-                    # user = User.objects.get(username=request.POST['username'])
-                    # token = default_token_generator.make_token(user)
-                    # uid = urlsafe_base64_encode(force_bytes(user.pk))
-                    # print '------------------------'
-                    # print uid
-                    # print '------------------------'
-                    # print token
-                    # print '------------------------'
-                    # send_simple_message(str(user.email),user,uid,token)
+                    user = User.objects.get(username=request.POST['username'])
+                    token = default_token_generator.make_token(user)
+                    uid = urlsafe_base64_encode(force_bytes(user.pk))
+                    send_simple_message(str(user.email),user,uid,token)
                     return redirect('/bienvenido')
                 else:
                     raise ValueError("Invalid username and password")
@@ -175,13 +166,13 @@ def confirmacion(request,uidb64,token):
             user_model = get_user_model()
             user = user_model.objects.get(pk=uid)
             print user
-            print user.is_active
+            print user.is_staff
             print token
-            if default_token_generator.check_token(user,token) and user.is_active == 0:
-                user.is_active = True
+            if default_token_generator.check_token(user,token) and user.is_staff == 0:
+                user.is_staff = True
                 user.save()
                 print 'es activo'
-                print user.is_active
+                print user.is_staff
                 return redirect('/bienvenido')
         except:
             return redirect('/ayuda')
