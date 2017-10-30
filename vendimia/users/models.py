@@ -23,7 +23,7 @@ class Perfil(SaveTheChange, models.Model):
         return '%s' % (self.user)
 
 class Clientes(SaveTheChange, models.Model):
-    nombre = models.CharField(max_length=13, blank=False, null=False)
+    nombre = models.CharField(max_length=40, blank=False, null=False)
     apellido_paterno = models.CharField(max_length=13, blank=False, null=False)
     apellido_materno = models.CharField(max_length=13, blank=False, null=False)
     rfc = models.CharField(max_length=13, blank=True, null=False)
