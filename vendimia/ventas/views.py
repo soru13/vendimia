@@ -147,10 +147,7 @@ class VentasCreation(LoginRequired,CreateView):
                     print  '-----------adelantamos un index----------------'                    
                     cantidad_articulo = testarray[index+1]
                     art = Articulos.objects.get(pk=articulo)
-                    if int(art.existencia) >= int(cantidad_articulo) :
-                        cantidad = int(art.existencia) - int(cantidad_articulo)
-                    else:
-                        return render(request, self.template_name, {'form': form})
+                    cantidad = int(art.existencia) - int(cantidad_articulo)
                     print  '---------------------------'
                     print art.descripcion
                     print 'cantidad existencia'+str(art.existencia)
