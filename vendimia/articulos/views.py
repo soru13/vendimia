@@ -62,7 +62,6 @@ def configuracion(request,peticion=None,id_objeto=0):
 		else:
 			formulario = configuracionForm(request.POST)
 			if formulario.is_valid():
-				print 'formulario validado pasamos a guardar'
 				formulario.save()
 				return redirect('/')
 	else:
@@ -73,10 +72,6 @@ def configuracion(request,peticion=None,id_objeto=0):
 		else:
 		    formulario = configuracionForm()
 		return  render(request, 'articulos/configuracion.html', {'form':formulario,'Perfil':perfil})
-	
-
-	
-
 	
 
 class ArticulosCreation(LoginRequired,CreateView):

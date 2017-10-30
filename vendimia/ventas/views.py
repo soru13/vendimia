@@ -98,6 +98,7 @@ class AutoCompleteArticulosView(FormView):
             data = json.dumps(results)
         return HttpResponse(data, 'application/json')
 
+#con esta funcion sabemos si es impar o par
 def esDivisible(num, divisor):
     if(num % divisor == 0):
         return True
@@ -112,17 +113,6 @@ class VentasCreation(LoginRequired,CreateView):
         form = self.form_class(request.POST)
         if form.is_valid():
             # <process form cleaned data>
-
-            
-
-            print  '---------------------------'
-            print request.POST['cantidad']
-            print request.POST['cantidad']
-
-
-
-
-            print  '---------------------------'
             
             form.save()
             
@@ -131,6 +121,10 @@ class VentasCreation(LoginRequired,CreateView):
             array_articulos =[] 
             array_articulos  = request.POST['cantidad']
             testarray = ast.literal_eval(array_articulos)
+
+            """llega un array en string por parametro post, 
+            el cual iteramos donde los pares son el id del articulo y 
+            los impares la cantidad a descontar enarticulos """
             for index,x in enumerate(testarray):
 
                 if esDivisible(index,2):
@@ -142,11 +136,8 @@ class VentasCreation(LoginRequired,CreateView):
                     print testarray[index+1]
                     print  '-----------adelantamos un index----------------'                    
                     cantidad_articulo = testarray[index+1]
-
                     art = Articulos.objects.get(pk=articulo)
-
                     cantidad = int(art.existencia) - int(cantidad_articulo)
-
                     print  '---------------------------'
                     print art.descripcion
                     print 'cantidad existencia'+str(art.existencia)

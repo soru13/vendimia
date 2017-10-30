@@ -16,7 +16,7 @@ class ClientesForm(forms.ModelForm):
         model = Clientes
         fields = ('nombre', 'apellido_paterno', 'apellido_materno', 'rfc','usuario_registro')
         widgets = {
-        'nombre': widgets.TextInput(attrs={"type":"text","pattern":"[a-zA-Z0]+", "placeholder" : 'nombre',"maxlength" : '40','title':'Descripcion','required':True}),
+        'nombre': widgets.TextInput(attrs={"type":"text", "placeholder" : 'nombre',"maxlength" : '40','title':'Descripcion','required':True}),
         'apellido_paterno': widgets.TextInput(attrs={"type":"text","pattern":"[a-zA-Z0]+","placeholder" : 'Apellido Paterno', "maxlength" : '40' ,'title':'Modelo','required':True}),
         'apellido_materno': widgets.TextInput(attrs={"type":"text","pattern":"[a-zA-Z0]+","placeholder" : 'Apellido Materno', "maxlength" : '40' ,'title':'Precio','required':True}),
         'rfc': widgets.TextInput(attrs={"type":"text","placeholder" : 'RFC',"oninput":"validarInput(this)" , "maxlength" : '40' ,"min" : '0' ,'title':'Existencia','required':True}),

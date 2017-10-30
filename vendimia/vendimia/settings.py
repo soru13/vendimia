@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'articulos',
     'ventas',
     'catalogos',
-    # 'cacheops',
+    'cacheops',
 ]
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'
@@ -113,13 +113,37 @@ WSGI_APPLICATION = 'vendimia.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'vendimia',
+        'USER': 'soru13',
+        'PASSWORD': 'E123123',
+        'HOST': 'localhost',
+        'PORT': '',
+        'OPTIONS': {
+            'options': '-c search_path=public'
+        },
+    },
+    'audit': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'vendimia',
+        'USER': 'soru13',
+        'PASSWORD': 'E123123',
+        'HOST': 'siproda-db.cfs7nkojikib.us-east-1.rds.amazonaws.com',
+        'PORT': '',
+        'OPTIONS': {
+            'options': '-c search_path=audit,public'
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators

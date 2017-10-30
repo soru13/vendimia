@@ -11,6 +11,8 @@ class AuditLocal(models.Model):
     fecha = models.DateTimeField(db_index=True)
     changed_fields = models.TextField(null=True)
     class Meta:
+        managed = False
+        db_table = 'audit_local'
         ordering = ['id']
     def __unicode__(self):
         return 'Audit'
