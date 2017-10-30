@@ -185,27 +185,27 @@ def send_simple_message(email,user,uid,token):
     return requests.post(
         "https://api.mailgun.net/v3/midler.co/messages",
         auth=("api", "key-97ff37f1f573adbe141a60c00625d0b0"),
-        data={"from": "Confirmacion midler.co<no-reply@midler.co>",
+        data={"from": "Confirmacion lavendimia.co<no-reply@lavendimia.co>",
               "to": "<"+email+">",
               "subject": "Hello "+user.username+"",
               "html": """
-              <h3 style="margin:0px">Bienvenido Sr/a: %s </h3><p>Para confirmar su registro en el sitio Midler le solicitamos haga click en el siguiente 
-        <a href='http://midler.co/validate/%s/%s/'>enlace de confirmacion</a><br><p><b>Gracias por formar parte de Midler.</b></p>
+              <h3 style="margin:0px">Bienvenido Sr/a: %s </h3><p>Para confirmar su registro en el sitio lavendimia le solicitamos haga click en el siguiente 
+        <a href='http://lavendimia.co/validate/%s/%s/'>enlace de confirmacion</a><br><p><b>Gracias por formar parte de lavendimia.</b></p>
         <small>Este es un mensaje enviado automaticamente. Por favor no responda a esta direccion de mail.</small>"""%(user, uid,token)
 
               })
 
 def send_simple_message_forgot_Password(email,uid,token,user):
     return requests.post(
-        "https://api.mailgun.net/v3/empleocondesarrollo.com/messages",
+        "https://api.mailgun.net/v3/midler.co/messages",
         auth=("api", "key-06e964d121fa064ed3a96dddd4e9dbfa"),
-        data={"from": "Confirmacion empleocondesarrollo.com<no-reply@empleocondesarrollo.com>",
+        data={"from": "Confirmacion lavendimia.com<no-reply@lavendimia.com>",
               "to": "<"+email+">",
               "subject": "Cambiar Password",
               "html": """
               <h3 style="margin:0px">Peticion de cambio de Password %s </h3><p>Para recuperar su password da click en el siguiente enlace 
-        <a href='http://empleocondesarrollo.com/email/validate/%s/%s/%s'>enlace de recuperacio
-        on de password</a><br><p><b>Gracias por formar parte de Empleocondesarrollo.</b></p>
+        <a href='http://lavendimia.com/email/validate/%s/%s/%s'>enlace de recuperacio
+        on de password</a><br><p><b>Gracias por formar parte de lavendimia.</b></p>
         <small>Este es un mensaje enviado automaticamente. Por favor no responda a esta direccion de mail.</small>"""%(email, uid,token,user)
 
               })

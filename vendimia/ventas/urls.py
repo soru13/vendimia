@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import (
-    VentasList,AutoCompleteView,AutoCompleteArticulosView,VentasNew,VentasDelete,VentasCreation
+    VentasList,AutoCompleteView,AutoCompleteArticulosView,VentasNew,VentasDelete,VentasCreation,VentasEdit
 )
 
 urlpatterns = [
@@ -11,4 +11,8 @@ urlpatterns = [
     url(r'^autocompletearticulo/$',AutoCompleteArticulosView.as_view(), name='autocompleteArticulos'),
     url(r'^nuevo$', VentasCreation.as_view(), name='nuevo'),
     url(r'^borrar/(?P<pk>\d+)$', VentasDelete.as_view(), name='delete'),
+    url(r'^editar/(?P<pk>\d+)$', VentasEdit, name='edit'),
+
+
+
 ]

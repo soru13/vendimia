@@ -48,6 +48,16 @@ def VentasNew(request):
         ventas =1
     return  render(request, 'ventas/ventas.html', {'forms':VentasForm(),'Perfil':perfil, 'ventas':ventas })
 
+@login_required(login_url = '/login')  
+def VentasEdit(request,venta):
+    perfil = Perfil.objects.get(user__username=request.user.username)
+    ventas = 0
+    if Ventas.objects.count() != 0:
+        ventas = Ventas.objects.latest('id').id +1
+    else:
+        ventas =1
+    return  render(request, 'ventas/ventas.html', {'forms':VentasForm(),'Perfil':perfil, 'ventas':ventas })
+
 class AutoCompleteView(FormView):
     def get(self,request,*args,**kwargs):
         data = request.GET

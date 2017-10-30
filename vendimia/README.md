@@ -60,7 +60,4 @@
 
 		python manage.py migrate
 		python manage.py createsuperuser
-
-		#Configuramos apache para wsgi
-		#https://docs.djangoproject.com/es/1.9/howto/deployment/wsgi/modwsgi/
 </p>
